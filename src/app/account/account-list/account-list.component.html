@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+      <h1>Accounts</h1>
+  </div>
+  <div class="panel-body">
+      <table class="table table-striped table-bordered">
+          <thead>
+              <tr>
+                  <th>Number Account</th>
+                  <th>Currency</th>
+                  <th>Balance</th>
+                  <th>Account Type</th>
+                  <th>Actions</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let content of contents | async">
+                    <td>{{account.numberAccount}}</td>
+                    <td>{{account.currency}}</td>
+                    <td>{{account.balance}}</td>
+                    <td>{{account.accountType}}</td>
+                    <td><button (click)="deleteAccount(account.id)">Delete</button></td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+</div>
