@@ -14,7 +14,7 @@ import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { AuthGuard } from './auth/login.auth.guard';
-import { NbThemeModule, NbLayoutModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbSidebarService, NbMenuModule } from '@nebular/theme';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -36,10 +36,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserAnimationsModule,
     NbThemeModule.forRoot({ name: 'corporate' }),
     NbLayoutModule,
+    NbSidebarModule,
+    NbMenuModule.forRoot(),
   ],
   providers: [
     AuthInterceptor, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    AuthGuard
+    AuthGuard,
+    NbSidebarService
   ],
   bootstrap: [AppComponent]
 })
