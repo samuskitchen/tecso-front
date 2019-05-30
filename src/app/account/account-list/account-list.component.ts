@@ -26,7 +26,6 @@ export class AccountListComponent implements OnInit {
     this.accountService.getAccountTypeList(accounType, page, size).subscribe(
       data => {
         this.contents = data.content;
-        console.log(data)
       },
       error => {
         console.log(error);
@@ -42,6 +41,9 @@ export class AccountListComponent implements OnInit {
           console.log(data);
           this.reloadData("CORRIENTE", 0, 10);
         },
-        error => console.log(error));
+        error => {
+          console.log(error);
+          this.errorMessage = error.error.message;
+        })
   }
 }

@@ -39,7 +39,7 @@ export class AccountService {
   }
 
   getAccountTypeList(accountType: string, page: number, size: number): Observable<ListAccount> {
-    return this.http.get<ListAccount>(`${this.baseUrl}/find/type/?accountType=${accountType}&page=${page}&size=${size}`, this.httpOptions);
+    return this.http.get<ListAccount>(`${this.baseUrl}/find/type/?accountType=${accountType}&page=${page}&size=${size}`);
   }
 
 }
