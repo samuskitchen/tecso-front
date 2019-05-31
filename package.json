@@ -24,7 +24,7 @@
     "@nebular/auth": "^3.4.2",
     "@nebular/bootstrap": "^3.4.2",
     "@nebular/theme": "^3.4.2",
-    "bootstrap": "^4.0.0",
+    "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "jquery": "^3.4.1",
     "nebular-icons": "^1.1.0",
