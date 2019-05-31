@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
-import { TokenStorageService } from '../auth/token-storage.service';
-import { AuthLoginInfo } from '../auth/login-info';
 import { DeviceInfo } from '../auth/device-Info';
-import { AppComponent } from '../app.component';
+import { AuthLoginInfo } from '../auth/login-info';
+import { AppComponent } from 'src/app/app.component';
+import { TokenStorageService } from '../auth/token-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +17,11 @@ export class LoginComponent implements OnInit {
   deviceInfo: DeviceInfo;
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage = '';
+  errorMessage: any = {};
   private loginInfo: AuthLoginInfo;
 
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService,
+  constructor(private router: Router, private authService: AuthService, private tokenStorage: TokenStorageService,
       private appComponent: AppComponent) { }
 
   ngOnInit() {
@@ -41,9 +42,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    console.log(this.form);
-
+  login() {
     this.loginInfo = new AuthLoginInfo(
       this.form.username,
       this.form.password,
@@ -60,11 +59,11 @@ export class LoginComponent implements OnInit {
 
         this.isLoginFailed = false;
         this.isLoggedIn = true;
-        this.reloadPage();
+        this.router.navigate(['home']);
       },
       error => {
         console.log(error);
-        this.errorMessage = error.error.message;
+        this.errorMessage = error.error;
         this.isLoginFailed = true;
       }
     );

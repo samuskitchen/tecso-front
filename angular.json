@@ -23,10 +23,10 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css",
               "src/styles.scss",
               "node_modules/bootstrap/dist/css/bootstrap.css",
-              "node_modules/nebular-icons/scss/nebular-icons.scss"
+              "node_modules/nebular-icons/scss/nebular-icons.scss",
+              "node_modules/@nebular/theme/styles/prebuilt/corporate.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

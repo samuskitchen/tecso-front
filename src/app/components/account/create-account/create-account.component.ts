@@ -1,5 +1,5 @@
-import { AccountService } from '../../account.service';
-import { Account } from '../../account';
+import { AccountService } from "../../../services/account/account.service";
+import { Account } from '../../../model/account';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -25,7 +25,6 @@ export class CreateAccountComponent implements OnInit {
   save() {
     this.accountService.createAccount(this.account)
       .subscribe(data => {this.account = data; console.log(data)}, error => console.log(error));
-    //this.account = new Account();
   }
 
   onSubmit() {

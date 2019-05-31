@@ -23,6 +23,13 @@ export class HomeComponent implements OnInit {
 
   logout() {
     this.token.signOut();
+
+    this.info = {
+      token: this.token.getToken(),
+      refreshToken: this.token.getResfreshToken(),
+      duration: this.token.getDuration()
+    };
+
     this.router.navigate(['auth/login']);
   }
 }

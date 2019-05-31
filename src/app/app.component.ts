@@ -1,24 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { DeviceInfo } from './auth/device-Info';
+import { TokenStorageService } from './components/auth/token-storage.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'Account [Tecso Team]';
+  info: any;
 
   public isMobilevar = false;
   public isTabletvar = false;
   public isDesktopvar = false;
  
-  constructor( private deviceService: DeviceDetectorService) {
+  constructor( private deviceService: DeviceDetectorService, private token: TokenStorageService) {
     this.detectDevice();
     this.isMobile();
     this.isTablet();
     this.isDesktop();
+  }
+
+  ngOnInit() {
+    this.info = {
+      token: this.token.getToken(),
+      refreshToken: this.token.getResfreshToken(),
+      duration: this.token.getDuration()
+    };
   }
  
   public detectDevice() {

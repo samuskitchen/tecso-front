@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { LogoutInfo } from './logout-info';
+import { LogoutInfo } from '../auth/logout-info';
 import { DeviceInfo } from './device-Info';
 import { HttpHeaders } from '@angular/common/http';
 
@@ -30,20 +30,13 @@ export class TokenStorageService {
   signOut() {
 
     this.deviceInfo = new DeviceInfo(
-          sessionStorage.getItem(DEVICE_ID), 
-          sessionStorage.getItem(DEVICE_TYPE));
+      sessionStorage.getItem(DEVICE_ID),
+      sessionStorage.getItem(DEVICE_TYPE));
 
     this.logoutInfo = new LogoutInfo(this.deviceInfo);
 
-    this.httpOptions = {
-      headers: new HttpHeaders({ 
-        'Content-Type': 'application/json',
-        'Authorization': this.getTokenType() + this.getToken()
-      })
-    };
-
-    this.authService.logout(this.logoutInfo, this.httpOptions).subscribe(
-      data => { 
+    this.authService.logout(this.logoutInfo).subscribe(
+      data => {
       },
       error => {
         console.log(error);
@@ -64,7 +57,7 @@ export class TokenStorageService {
     return sessionStorage.getItem(TOKEN_KEY);
   }
 
-  public saveTokenType(tokenType: string){
+  public saveTokenType(tokenType: string) {
     window.sessionStorage.removeItem(TOKEN_TYPE);
     window.sessionStorage.setItem(TOKEN_TYPE, tokenType);
   }
@@ -91,13 +84,13 @@ export class TokenStorageService {
     return sessionStorage.getItem(DURATION_KEY);
   }
 
-  public saveDeviceInfo(deviceInfo: DeviceInfo){
+  public saveDeviceInfo(deviceInfo: DeviceInfo) {
     window.sessionStorage.removeItem(DEVICE_TYPE);
     window.sessionStorage.removeItem(DEVICE_ID);
-    
+
     window.sessionStorage.setItem(DEVICE_TYPE, deviceInfo.deviceType);
     window.sessionStorage.setItem(DEVICE_ID, deviceInfo.deviceId);
-  } 
+  }
 
   reloadPage() {
     window.location.reload();

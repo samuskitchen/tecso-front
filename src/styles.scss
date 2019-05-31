@@ -1,7 +1,11 @@
 @import 'themes';
 
 @import '~@nebular/theme/styles/globals';
+@import '~@nebular/auth/styles/themes/default';
+@import '~@nebular/auth/styles/themes/corporate';
+@import '~@nebular/auth/styles/globals';
 
 @include nb-install() {
   @include nb-theme-global();
+  @include nb-auth-global(); 
 };

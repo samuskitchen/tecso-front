@@ -1,7 +1,6 @@
 import { Observable } from "rxjs";
-import { AccountService } from "../../account.service";
-import { Account } from "../../account";
-import { ListAccount } from '../../listAccount';
+import { AccountService } from "../../../services/account/account.service";
+import { Account } from "../../../model/account";
 import { Component, OnInit } from "@angular/core";
 
 
@@ -16,7 +15,7 @@ export class AccountListComponent implements OnInit {
   contents: Account[];
   errorMessage = '';
 
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService) { }
 
   ngOnInit() {
     this.reloadData("CORRIENTE", 0, 10);

@@ -1,4 +1,4 @@
-import { DeviceInfo } from './device-Info';
+import { DeviceInfo } from '../auth/device-Info';
 
  export class LogoutInfo{
     deviceInfo: DeviceInfo;

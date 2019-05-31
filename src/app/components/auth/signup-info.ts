@@ -1,5 +1,3 @@
-import { DeviceInfo } from './device-Info';
-
 export class SignUpInfo {
     username: string;
     password: string;
