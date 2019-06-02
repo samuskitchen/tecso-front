@@ -33,8 +33,8 @@ export class AccountService {
     return this.http.put(`${ENV.baseUrl}account/update`, accountUpdate);
   }
 
-  deleteAccount(id: number): Observable<any> {
-    return this.http.delete(`${ENV.baseUrl}account/delete?id=${id}`, { responseType: 'text' });
+  deleteAccount(id: number): Observable<string> {
+    return this.http.delete<string>(`${ENV.baseUrl}account/delete?id=${id}`);
   }
 
   getAccountTypeList(accountType: string, page: number, size: number): Observable<ListAccount> {

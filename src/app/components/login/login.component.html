@@ -1,63 +1,16 @@
-<!-- <div *ngIf="isLoggedIn; else loggedOut">
-  Logged.
-</div>
-
-<ng-template #loggedOut>
-  <div class="row col-sm-6" style="max-width:350px;">
-    <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-      
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="text" class="form-control" name="email" [(ngModel)]="form.email" #email="ngModel" required email />
-        <div *ngIf="f.submitted && email.invalid">
-          <div *ngIf="email.errors.required">Email is required</div>
-          <div *ngIf="email.errors.email">Email must be a valid email address</div>
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" name="username" [(ngModel)]="form.username" #username="ngModel" required />
-        <div *ngIf="f.submitted && username.invalid">
-          <div *ngIf="username.errors.required">Username is required</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" name="password" [(ngModel)]="form.password" #password="ngModel" required minlength="5" />
-        <div *ngIf="f.submitted && password.invalid">
-          <div *ngIf="password.errors.required">Password is required</div>
-          <div *ngIf="password.errors.minlength">Password must be at least 6 characters</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <button class="btn btn-primary">Login</button>
-        <div *ngIf="f.submitted && isLoginFailed" class="alert alert-danger">
-          Login failed: {{errorMessage}}
-        </div>
-      </div>
-      
-    </form>
-    <hr />
-    <p>Don't have an account?</p>
-    <a href="signup" class="btn btn-success">Sign Up</a>
-  </div>
-</ng-template> -->
-
 <nb-layout-column>
   <nb-card>
     <nb-card-body>
       <nb-auth-block style="margin: auto;">
-        <h1 id="title" class="title">Login</h1>
 
-        <nb-alert *ngIf="errorMessage.error && errors?.length && !submitted" outline="danger" role="alert">
+        <nb-alert *ngIf="isLoginFailed" outline="danger" role="alert">
           <p class="alert-title"><b>Problems!</b></p>
           <ul class="alert-message-list">
-            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+            <li class="alert-message">{{ errorMessage }}</li>
           </ul>
         </nb-alert>
+
+        <h1 id="title" class="title">Login</h1>
 
         <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate aria-labelledby="title" class="ng-untouched ng-pristine ng-valid">
           
@@ -121,9 +74,7 @@
                 Password is required!
               </p>
               <p class="error-message" *ngIf="password.errors?.minlength || password.errors?.maxlength">
-                The password must be
-                 between 5 to 10
-                 characters.
+                The password must be between 5 to 10 characters.
               </p>
             </ng-container>
           </div>
@@ -136,6 +87,25 @@
             Login
           </button>
         </form>
+
+        <section *ngIf="socialLinks && socialLinks.length > 0" class="links" aria-label="Social sign in">
+            or enter with:
+            <div class="socials">
+              <ng-container *ngFor="let socialLink of socialLinks">
+                <a *ngIf="socialLink.link"
+                   [routerLink]="socialLink.link"
+                   [attr.target]="socialLink.target"
+                   [attr.class]="socialLink.icon"
+                   [class.with-icon]="socialLink.icon">{{ socialLink.title }}</a>
+                <a *ngIf="socialLink.url"
+                   [attr.href]="socialLink.url"
+                   [attr.target]="socialLink.target"
+                   [attr.class]="socialLink.icon"
+                   [class.with-icon]="socialLink.icon">{{ socialLink.title }}</a>
+              </ng-container>
+            </div>
+          </section>
+          
         <section class="another-action" aria-label="Register">
           You are not registered? <a class="text-link" routerLink="../signup">Sign up</a>
         </section>

@@ -1,27 +1,75 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-      <h1>Accounts {{errorMessage}}</h1>
-  </div>
-  <div class="panel-body">
-      <table class="table table-striped table-bordered">
-          <thead>
-              <tr>
-                  <th>Number Account</th>
-                  <th>Currency</th>
-                  <th>Balance</th>
-                  <th>Account Type</th>
-                  <th>Actions</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let account of contents">
-                    <td>{{account.numberAccount}}</td>
-                    <td>{{account.currency}}</td>
-                    <td>{{account.balance}}</td>
-                    <td>{{account.accountType}}</td>
-                    <td><button (click)="deleteAccount(account.id)">Delete</button></td>
-              </tr>
-          </tbody>
-      </table>
-  </div>
-</div>
+<nb-layout-column>
+    <nb-card>
+        <nb-card-body>
+
+            <nb-alert *ngIf="isSignedUp" outline="success" role="alert">
+                <p class="alert-title"><b>Success!</b></p>
+                <ul class="alert-message-list">
+                    <li class="alert-message">{{ successMessage }}</li>
+                </ul>
+            </nb-alert>
+
+            <nb-alert *ngIf="errorDisplay" outline="danger" role="alert">
+                <p class="alert-title"><b>Problems!</b></p>
+                <ul class="alert-message-list">
+                    <li class="alert-message">{{ errorMessage }}</li>
+                </ul>
+            </nb-alert>    
+
+            <mat-form-field>
+            <mat-label>Select an option</mat-label>
+            <mat-select [(ngModel)]="accounType" required>
+                <mat-option *ngFor="let accounType of accounTypes" [value]="accounType.value">
+                    {{accounType.viewValue}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="accounTypeControl.hasError('required')">Please choose an account type</mat-error>
+            </mat-form-field>
+
+            <button 
+                nbButton
+                class="btn btn-primary btn-xs button-search" 
+                (click)="search()" 
+                [disabled]="accounType == null">Search</button>
+
+            <hr>
+
+            <div class="mat-elevation-z8">
+                <mat-table #table [dataSource]="listData" matSort>
+                    <ng-container matColumnDef="numberAccount">
+                        <mat-header-cell *matHeaderCellDef>Number Accont</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.numberAccount}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="currency">
+                        <mat-header-cell *matHeaderCellDef>Currency</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.currency}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="balance">
+                        <mat-header-cell *matHeaderCellDef>Balance</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.balance}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="accountType">
+                        <mat-header-cell *matHeaderCellDef>Account Type</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{element.accountType}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                        <button mat-icon-button><mat-icon>launch</mat-icon></button>
+                        <button mat-icon-button color="warn" (click)="deleteAccount(row)"><mat-icon>delete_outline</mat-icon></button>
+                    </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+                <mat-paginator #paginator
+                        [length]="totalElements" 
+                        [pageIndex]="0" 
+                        [pageSize]="5" 
+                        [pageSizeOptions]="[5, 10, 25, 100]"
+                        [showFirstLastButtons]="true">
+                </mat-paginator>
+            </div>
+        </nb-card-body>
+    </nb-card>
+</nb-layout-column>

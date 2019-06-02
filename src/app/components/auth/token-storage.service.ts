@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { LogoutInfo } from '../auth/logout-info';
 import { DeviceInfo } from './device-Info';
-import { HttpHeaders } from '@angular/common/http';
 
 const TOKEN_KEY = 'accessToken';
 const REFRESH_KEY = 'refreshToken';
@@ -39,7 +38,6 @@ export class TokenStorageService {
       data => {
       },
       error => {
-        console.log(error);
         this.errorMessage = error.error.message;
         this.isLoginFailed = true;
       }

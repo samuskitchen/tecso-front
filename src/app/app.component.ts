@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { TokenStorageService } from './components/auth/token-storage.service';
 
 @Component({
   selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.component.html',
 })
+
 export class AppComponent implements OnInit{
   title = 'Account [Tecso Team]';
   info: any;
@@ -22,11 +24,15 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
+    console.log("ngOnInit");
     this.info = {
       token: this.token.getToken(),
       refreshToken: this.token.getResfreshToken(),
       duration: this.token.getDuration()
     };
+
+    console.log(this.info);
+
   }
  
   public detectDevice() {
@@ -44,4 +50,24 @@ export class AppComponent implements OnInit{
   public isDesktop() {
     this.isDesktopvar = this.deviceService.isDesktop();
   }
+
+  tabs: any[] = [
+    {
+      title: 'Home',
+      icon: 'nb-home',
+      route: 'home',
+    },
+    {
+      title: 'Accounts',
+      icon: 'nb-list',
+      responsive: true,
+      route: [ '/accounts' ],
+    },
+    {
+      title: 'Add Account',
+      icon: 'nb-compose',
+      responsive: true,
+      route: [ '/add' ],
+    },
+  ];
 }

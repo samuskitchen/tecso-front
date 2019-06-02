@@ -1,50 +1,122 @@
-<div *ngIf="isSignedUp; else signupForm">
-  Your registration is successful. Please login!
-</div>
+<nb-layout-column>
+  <nb-card>
+    <nb-card-body>
+      <nb-auth-block style="margin: auto;">
 
-<ng-template #signupForm>
-  <div class="row col-sm-6" style="max-width:350px;">
-    <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-      
-      <div class="form-group">
-        <label for="name">Is Admin</label>
-        <input type="checkbox" class="form-control" name="name" [(ngModel)]="form.registerAsAdmin" #name="ngModel" required />
-      </div>
-     
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="text" class="form-control" name="email" [(ngModel)]="form.email" #email="ngModel" required email />
-        <div *ngIf="f.submitted && email.invalid">
-          <div *ngIf="email.errors.required">Email is required</div>
-          <div *ngIf="email.errors.email">Email must be a valid email address</div>
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" name="username" [(ngModel)]="form.username" #username="ngModel"
-          required />
-        <div *ngIf="f.submitted && username.invalid">
-          <div *ngIf="username.errors.required">Username is required</div>
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" name="password" [(ngModel)]="form.password" #password="ngModel"
-          required minlength="6" />
-        <div *ngIf="f.submitted && password.invalid">
-          <div *ngIf="password.errors.required">Password is required</div>
-          <div *ngIf="password.errors.minlength">Password must be at least 6 characters</div>
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <button class="btn btn-primary">Register</button>
-        <div *ngIf="f.submitted && isSignUpFailed" class="alert alert-warning">
-          Signup failed!<br/>{{errorMessage}}
-        </div>
-      </div>
-    </form>
-  </div>
-</ng-template>
+        <nb-alert *ngIf="isSignUpFailed" outline="danger" role="alert">
+          <p class="alert-title"><b>Problems!</b></p>
+          <ul class="alert-message-list">
+            <li class="alert-message">{{ errorMessage }}</li>
+          </ul>
+        </nb-alert>
+        
+        <nb-alert *ngIf="isSignedUp" outline="success" role="alert">
+          <p class="alert-title"><b>Success!</b></p>
+          <ul class="alert-message-list">
+            <li class="alert-message">{{ successMessage }}</li>
+          </ul>
+        </nb-alert>
+
+        <h1 id="title" class="title">Register</h1>
+
+        <form name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate aria-labelledby="title">
+
+          <div class="form-control-group">
+            <label class="label" for="input-email">Email address:</label>
+            <input nbInput
+                   [(ngModel)]="form.email"
+                   #email="ngModel"
+                   id="input-email"
+                   name="email"
+                   pattern=".+@.+..+"
+                   placeholder="Email address"
+                   fullWidth
+                   autofocus
+                   [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : ''"
+                   [required]="true"
+                   [attr.aria-invalid]="email.invalid && email.touched ? true : null">
+            <ng-container *ngIf="email.invalid && email.touched">
+              <p class="error-message" *ngIf="email.errors?.required">
+                Email is required!
+              </p>
+              <p class="error-message" *ngIf="email.errors?.pattern">
+                Email should be the real one!
+              </p>
+            </ng-container>
+          </div>
+
+          <div class="form-control-group">
+            <label class="label" for="input-name">Username:</label>
+            <input nbInput
+                   [(ngModel)]="form.username"
+                   #username="ngModel"
+                   id="input-name"
+                   name="username"
+                   placeholder="Username"
+                   fullWidth
+                   [status]="username.dirty ? (username.invalid  ? 'danger' : 'success') : ''"
+                   [required]="true"
+                   [minlength]="5"
+                   [maxlength]="20"
+                   [attr.aria-invalid]="username.invalid && username.touched ? true : null">
+            <ng-container *ngIf="username.invalid && username.touched">
+              <p class="error-message" *ngIf="username.errors?.required">
+                Username is required!
+              </p>
+              <p class="error-message" *ngIf="username.errors?.minlength || username.errors?.maxlength">
+                Username should contains from 5 to 20 characters
+              </p>
+            </ng-container>
+          </div>
+
+          <div class="form-control-group">
+            <label class="label" for="input-password">Password:</label>
+            <input nbInput
+                   [(ngModel)]="form.password"
+                   #password="ngModel"
+                   type="password"
+                   id="input-password"
+                   name="password"
+                   placeholder="Password"
+                   fullWidth
+                   [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : ''"
+                   [required]="true"
+                   [minlength]="5"
+                   [maxlength]="10"
+                   [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+            <ng-container *ngIf="password.invalid && password.touched">
+              <p class="error-message" *ngIf="password.errors?.required">
+                Password is required!
+              </p>
+              <p class="error-message" *ngIf="password.errors?.minlength || password.errors?.maxlength">
+                Password should contains
+                from 5
+                to 10
+                characters
+              </p>
+            </ng-container>
+          </div>
+
+          <div class="form-control-group">
+            <div class="row demo-checkboxes-radio">
+              <nb-checkbox name="registerAsAdmin" status="success" class="col-sm-4" [(ngModel)]="form.registerAsAdmin" #registerAsAdmin="ngModel">Is Admin</nb-checkbox>
+            </div>
+          </div>
+
+          <button nbButton
+                  fullWidth
+                  status="success"
+                  [disabled]="f.submitted || isSignUpFailed"
+                  [class.btn-pulse]="submitted">
+            Register
+          </button>
+        </form>
+
+        <section class="another-action" aria-label="Sign in">
+          Already have an account? <a class="text-link" routerLink="../login">Log in</a>
+        </section>
+
+      </nb-auth-block>
+    </nb-card-body>
+  </nb-card>
+</nb-layout-column>

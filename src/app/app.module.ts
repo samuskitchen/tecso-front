@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CreateAccountComponent } from './components/account/create-account/create-account.component';
@@ -16,14 +16,10 @@ import { AuthInterceptor } from './components/auth/auth-interceptor';
 import { AuthGuard } from './components/auth/login.auth.guard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NbColumnsService } from '@nebular/theme/components/tree-grid/tree-grid-columns.service';
-import {
-  NbThemeModule, NbLayoutModule, NbSidebarModule,
-  NbSidebarService, NbMenuModule, NbAlertModule,
-  NbButtonModule, NbCheckboxModule, NbInputModule,
-  NbToastrModule, NbUserModule, NbThemeService,
-  NbActionsModule, NbMediaBreakpointsService, NbCardModule
-} from '@nebular/theme';
+import * as Nebular from '@nebular/theme';
 import { NbAuthModule } from '@nebular/auth';
+import { NbTableModule } from '@nebular/theme/components/cdk/table';
+import * as Material from "@angular/material";
 
 @NgModule({
   declarations: [
@@ -35,6 +31,7 @@ import { NbAuthModule } from '@nebular/auth';
     RegisterComponent,
     HomeComponent,
   ],
+  
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -42,27 +39,47 @@ import { NbAuthModule } from '@nebular/auth';
     HttpClientModule,
     DeviceDetectorModule.forRoot(),
     BrowserAnimationsModule,
-    NbThemeModule.forRoot({ name: 'corporate' }),
-    NbLayoutModule,
-    NbSidebarModule,
-    NbMenuModule,
-    NbAlertModule,
-    NbButtonModule,
-    NbCheckboxModule,
-    NbInputModule,
-    NbToastrModule,
-    NbUserModule,
-    NbActionsModule,
-    NbCardModule,
+    ReactiveFormsModule,
+
+    //Nebular Modules
+    Nebular.NbThemeModule.forRoot({ name: 'corporate' }),
+    Nebular.NbLayoutModule,
+    Nebular.NbSidebarModule,
+    Nebular.NbMenuModule,
+    Nebular.NbAlertModule,
+    Nebular.NbButtonModule,
+    Nebular.NbCheckboxModule,
+    Nebular.NbInputModule,
+    Nebular.NbToastrModule,
+    Nebular.NbUserModule,
+    Nebular.NbActionsModule,
+    Nebular.NbCardModule,
     NbAuthModule.forRoot(),
+    NbTableModule,
+    Nebular.NbRouteTabsetModule,
+
+    //Material Angular
+    Material.MatGridListModule,
+    Material.MatFormFieldModule,
+    Material.MatInputModule,
+    Material.MatTableModule,
+    Material.MatIconModule,
+    Material.MatPaginatorModule,
+    Material.MatSortModule,
+    Material.MatSelectModule,
+    Material.MatFormFieldModule,
   ],
   providers: [
     AuthInterceptor, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthGuard,
-    NbSidebarService,
-    NbThemeService,
+
+    //Nebular Service
+    Nebular.NbSidebarService,
+    Nebular.NbThemeService,
     NbColumnsService,
-    NbMediaBreakpointsService,
+    Nebular.NbMediaBreakpointsService,
+    NbColumnsService,
+    Nebular.NbLayoutRulerService,
   ],
   bootstrap: [AppComponent]
 })

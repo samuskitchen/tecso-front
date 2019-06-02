@@ -17,8 +17,21 @@ export class LoginComponent implements OnInit {
   deviceInfo: DeviceInfo;
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage: any = {};
+  errorMessage = "";
   private loginInfo: AuthLoginInfo;
+
+  public socialLinks = [
+    {
+      url: 'https://github.com/samuskitchen/tecso-front',
+      target: '_blank',
+      icon: 'socicon-github',
+    },
+    {
+      url: 'https://www.linkedin.com/in/daniel-de-la-pava-suarez/',
+      target: '_blank',
+      icon: 'socicon-linkedin',
+    }
+  ];
 
 
   constructor(private router: Router, private authService: AuthService, private tokenStorage: TokenStorageService,
@@ -62,9 +75,9 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['home']);
       },
       error => {
-        console.log(error);
-        this.errorMessage = error.error;
         this.isLoginFailed = true;
+        this.isLoggedIn = false;
+        this.errorMessage = error.error['message'];
       }
     );
   }
