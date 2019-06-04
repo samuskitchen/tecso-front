@@ -1,0 +1,247 @@
+<mat-dialog-content class="mat-typography" id="account-dialog">
+    <nb-layout-column>
+        <nb-card>
+            <nb-card-body>
+                <nb-auth-block style="margin: auto;">
+    
+                    <nb-alert *ngIf="isUpdateFailed" outline="danger" role="alert">
+                        <p class="alert-title"><b>Problems!</b></p>
+                        <ul class="alert-message-list">
+                            <li class="alert-message">{{ errorMessage }}</li>
+                        </ul>
+                    </nb-alert>
+                    
+                    <nb-alert *ngIf="isUpdateUp" outline="success" role="alert">
+                        <p class="alert-title"><b>Success!</b></p>
+                        <ul class="alert-message-list">
+                            <li class="alert-message">{{ successMessage }}</li>
+                        </ul>
+                    </nb-alert>
+    
+                    <h1 id="title" class="title">Update Account</h1>
+    
+                    <form name="form" (ngSubmit)="f.form.valid && update()" #f="ngForm" aria-labelledby="title" class="ng-untouched ng-pristine ng-valid">
+
+                        <div class="form-control-group" >
+                            <label class="label" for="input-numberAccount">Number Account:</label>
+                            <input nbInput
+                                    smallWidth
+                                    class="form-control"
+                                    [(ngModel)]="account.numberAccount"
+                                    #numberAccount="ngModel"
+                                    name="numberAccount"
+                                    id="input-numberAccount"
+                                    disabled>
+                        </div>
+
+                        <div class="form-control-group">
+                            <label class="label" for="select-currency">Currency:</label>
+                            <nb-select id="select-currency" placeholder="Select Currency" status="primary" [(selected)]="account.currency">
+                                <nb-option value="PESO">Pesos</nb-option>
+                                <nb-option value="DOLAR">Dolar</nb-option>
+                                <nb-option value="EURO">Euro</nb-option>
+                            </nb-select>
+                        </div>
+    
+                        <div class="form-control-group" >
+                            <label class="label" for="input-balance">Balance:</label>
+                            <input nbInput
+                                    smallWidth
+                                    class="form-control"
+                                    [(ngModel)]="account.balance"
+                                    #balance="ngModel"
+                                    name="balance"
+                                    id="input-balance"
+                                    type="number"
+                                    [maxlength]="20"
+                                    [required]="true"
+                                    [attr.aria-invalid]="balance.invalid && balance.touched ? true : null">
+                                <ng-container *ngIf="balance.invalid && balance.touched">
+                                    <p class="error-message" *ngIf="balance.errors?.required">
+                                        Balance is required!
+                                    </p>
+                                </ng-container>
+                        </div>
+    
+                        <div class="form-control-group">
+                            <label class="label" for="select-account-type">Account Type:</label>
+                            <nb-select id="select-account-type" placeholder="Select Account Type" status="primary" [(selected)]="account.accountType" disabled>
+                                <nb-option value="CORRIENTE">Current</nb-option>
+                                <nb-option value="AHORROS">Savings</nb-option>
+                            </nb-select>
+                        </div>
+    
+                        <nb-card *ngIf="showLegalPerson" style="margin: auto; width: 502px;" disabled>
+                            <nb-card-body>
+                                <nb-auth-block style="margin: auto;">
+                                    <h1 id="title" class="title">Legal Person Data</h1>
+    
+                                    <div class="input-group input-group-sm" >
+                                        <label class="label" for="input-businessName">Business Name:</label>
+                                        <input nbInput
+                                            class="form-control"
+                                            fullWidth
+                                            [(ngModel)]="legalPerson.businessName"
+                                            #businessName="ngModel"
+                                            name="businessName"
+                                            id="input-businessName"
+                                            disabled>
+                                    </div>
+                                    <br>
+
+                                    <div class="input-group input-group-sm">
+                                        <label class="label" for="input-foundationYear">Foundation Year:</label>
+                                        <input nbInput
+                                            class="form-control"
+                                            fullWidth
+                                            [(ngModel)]="legalPerson.foundationYear"
+                                            #foundationYear="ngModel"
+                                            name="foundationYear"
+                                            id="input-foundationYear"
+                                            disabled>
+                                    </div>
+                                    <br>
+
+                                    <div class="input-group input-group-sm">
+                                        <label class="label" for="input-rut">RUT:</label>
+                                        <input nbInput
+                                            class="form-control"
+                                            fullWidth
+                                            [(ngModel)]="legalPerson.rut"
+                                            #rut="ngModel"
+                                            name="rut"
+                                            type="number"
+                                            id="input-rut"
+                                            disabled>
+                                    </div>
+                                    <br>
+    
+                                    <div class="form-control-group">
+                                        <div class="row demo-checkboxes-radio">
+                                            <nb-checkbox 
+                                                name="isPersonLegalActive" 
+                                                status="success" 
+                                                class="col-sm-6" 
+                                                [(ngModel)]="legalPerson.active" 
+                                                disabled
+                                                #isPersonLegalActive="ngModel">Is Person Active</nb-checkbox>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </nb-auth-block>
+                            </nb-card-body>
+                        </nb-card>
+                        <br *ngIf="showLegalPerson">
+    
+                        <nb-card *ngIf="showPhysicalPerson" style="margin: auto; width: 502px;" disabled>
+                            <nb-card-body>
+                                <nb-auth-block style="margin: auto;">
+                                    <h1 id="title" class="title">Legal Physical Data</h1>
+                                    <br>
+
+                                    <div class="input-group input-group-sm" >
+                                        <label class="label" for="input-name">Name:</label>
+                                        <input nbInput
+                                            fullWidth
+                                            class="form-control"
+                                            [(ngModel)]="physicalPerson.name"
+                                            #name="ngModel"
+                                            name="name"
+                                            id="input-name"
+                                            disabled>
+                                    </div>
+                                    <br>
+
+                                    <div class="input-group input-group-sm" >
+                                        <label class="label" for="input-surname">SurName:</label>
+                                        <input nbInput
+                                            fullWidth
+                                            class="form-control"
+                                            [(ngModel)]="physicalPerson.surname"
+                                            #surname="ngModel"
+                                            name="surname"
+                                            id="input-surname"
+                                            disabled>
+                                    </div>
+                                    <br>
+
+                                    <div class="form-control-group">
+                                        <label class="label" for="select-document-type">Document Type:</label>
+                                        <nb-select id="select-document-type" placeholder="Document Type" status="primary" [(selected)]="physicalPerson.documentType" disabled>
+                                            <nb-option value="NI">Número identificación Tributaria</nb-option>
+                                            <nb-option value="CC">Cédula de Ciudadanía</nb-option>
+                                            <nb-option value="CE">Cédula de Extranjería</nb-option>
+                                            <nb-option value="TI">Tarjeta de Identidad</nb-option>
+                                            <nb-option value="RC">Registro Civil</nb-option>
+                                            <nb-option value="PA">Pasaporte</nb-option>
+                                            <nb-option value="CD">Carnet Diplomático</nb-option>
+                                        </nb-select>
+                                    </div>
+    
+                                    <div class="input-group input-group-sm">
+                                        <label class="label" for="input-numberDocument">Number Document:</label>
+                                        <input nbInput
+                                            fullWidth
+                                            class="form-control"
+                                            [(ngModel)]="physicalPerson.numberDocument"
+                                            #numberDocument="ngModel"
+                                            name="numberDocument"
+                                            id="input-numberDocument"
+                                            disabled>
+                                    </div>
+                                    <br>
+                                    
+                                    <div class="input-group input-group-sm">
+                                        <label class="label" for="input-rut-physical">RUT:</label>
+                                        <input nbInput
+                                            fullWidth
+                                            class="form-control"
+                                            [(ngModel)]="physicalPerson.rut"
+                                            #rutPhysical="ngModel"
+                                            name="rutPhysical"
+                                            type="number"
+                                            id="input-rut-physical"
+                                            disabled>
+                                    </div>
+                                    <br>
+    
+                                    <div class="form-control-group">
+                                        <div class="row demo-checkboxes-radio">
+                                            <nb-checkbox 
+                                                name="isPersonPhysicalActive" 
+                                                status="success" 
+                                                class="col-sm-6" 
+                                                disabled
+                                                [(ngModel)]="physicalPerson.active" 
+                                                #isPersonPhysicalActive="ngModel">Is Person Active</nb-checkbox>
+                                        </div>
+                                    </div>
+                                </nb-auth-block>
+                            </nb-card-body>
+                        </nb-card>
+                        <br *ngIf="showPhysicalPerson">
+
+                        <div class="row full-name-inputs">
+                            <div class="col-sm-6 input-group">
+                                <a nbButton
+                                    fullWidth
+                                    status="warning"
+                                    (click)="onClose()">
+                                    Close
+                                </a>
+                            </div>
+                            <div class="col-sm-6 input-group">
+                                <button nbButton
+                                    fullWidth
+                                    status="primary"
+                                    [class.btn-pulse]="submitted">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                </form>
+            </nb-auth-block>
+        </nb-card-body>
+      </nb-card>
+    </nb-layout-column>
+</mat-dialog-content>

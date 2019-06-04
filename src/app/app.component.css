@@ -1,0 +1,7 @@
+nb-layout-column {
+  height: 50vw;
+}
+
+nb-layout-column:first-child {
+  background: #e3e6f9;
+}

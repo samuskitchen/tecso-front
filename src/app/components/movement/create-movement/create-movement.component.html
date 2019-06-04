@@ -1,0 +1,120 @@
+<mat-dialog-content class="mat-typography" id="movement-dialog">
+    <nb-layout-column>
+        <nb-card>
+            <nb-card-body>
+                <nb-auth-block style="margin: auto;">
+    
+                    <nb-alert *ngIf="isCreateFailed" outline="danger" role="alert">
+                        <p class="alert-title"><b>Problems!</b></p>
+                        <ul class="alert-message-list">
+                            <li class="alert-message">{{ errorMessage }}</li>
+                        </ul>
+                    </nb-alert>
+                    
+                    <nb-alert *ngIf="isCreateUp" outline="success" role="alert">
+                        <p class="alert-title"><b>Success!</b></p>
+                        <ul class="alert-message-list">
+                            <li class="alert-message">{{ successMessage }}</li>
+                        </ul>
+                    </nb-alert>
+    
+                    <h1 id="title" class="title">Add Movement</h1>
+    
+                    <form name="form" (ngSubmit)="f.form.valid && create()" #f="ngForm" aria-labelledby="title" class="ng-untouched ng-pristine ng-valid">
+    
+                        <div class="form-control-group" >
+                            <label class="label" for="input-numberAccount">Number Account:</label>
+                            <input nbInput
+                                    smallWidth
+                                    class="form-control"
+                                    [(ngModel)]="account.numberAccount"
+                                    #numberAccount="ngModel"
+                                    name="numberAccount"
+                                    id="input-numberAccount"
+                                    disabled>
+                        </div>
+    
+                        <div class="form-control-group">
+                            <label class="label" for="select-movement-type">Movement Type:</label>
+                            <nb-select 
+                                id="select-movement-type" 
+                                placeholder="Select Movement Type" 
+                                status="primary" 
+                                [(selected)]="movement.typeMovement"
+                                autofocus
+                                required="true">
+                                <nb-option value="DEBITO">Debit</nb-option>
+                                <nb-option value="CREDITO">Credit</nb-option>
+                            </nb-select>
+                        </div>
+    
+                        <div class="form-control-group" >
+                            <label class="label" for="textarea-description">Description:</label>
+                            <textarea 
+                                    rows="2" 
+                                    class="form-control"
+                                    [(ngModel)]="movement.description"
+                                    #description="ngModel"
+                                    name="description"
+                                    id="textarea-description"
+                                    [required]="true"
+                                    [maxlength]="200"
+                                    [attr.aria-invalid]="description.invalid && description.touched ? true : null"></textarea>
+                            <ng-container *ngIf="description.invalid && description.touched">
+                                <p class="error-message" *ngIf="description.errors?.required">
+                                    Description is required!
+                                </p>
+                            </ng-container>
+                        </div>
+    
+                       <div class="form-control-group" >
+                            <label class="label" for="input-amount">Amount:</label>
+                            <input nbInput
+                                    smallWidth
+                                    class="form-control"
+                                    [(ngModel)]="movement.amount"
+                                    #amount="ngModel"
+                                    name="amount"
+                                    id="input-amount"
+                                    type="number"
+                                    [required]="true"
+                                    [attr.aria-invalid]="amount.invalid && amount.touched ? true : null">
+                            <ng-container *ngIf="amount.invalid && amount.touched">
+                                <p class="error-message" *ngIf="amount.errors?.required">
+                                    Amount is required!
+                                </p>
+                            </ng-container>
+                        </div>
+    
+                        <div class="row full-name-inputs">
+                          <div class="col-sm-3 input-group">
+                              <a nbButton
+                                 fullWidth
+                                 status="warning"
+                                 (click)="onClose()">
+                                 Close
+                              </a>
+                          </div>
+                          <div class="col-sm-5 input-group">
+                              <a nbButton
+                                  fullWidth
+                                  status="primary"
+                                  (click)="newMovement()">
+                                  New Movement
+                              </a>
+                          </div>
+                          <div class="col-sm-4 input-group">
+                              <button nbButton
+                                  fullWidth
+                                  status="success"
+                                  [class.btn-pulse]="submitted">
+                                  Create
+                              </button>
+                          </div>
+                        </div>
+                    </form>
+                </nb-auth-block>
+            </nb-card-body>
+        </nb-card>
+    </nb-layout-column>
+</mat-dialog-content>

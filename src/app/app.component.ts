@@ -15,6 +15,8 @@ export class AppComponent implements OnInit{
   public isMobilevar = false;
   public isTabletvar = false;
   public isDesktopvar = false;
+  public login = false;
+  public logout = false;
  
   constructor( private deviceService: DeviceDetectorService, private token: TokenStorageService) {
     this.detectDevice();
@@ -24,15 +26,11 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
-    console.log("ngOnInit");
     this.info = {
       token: this.token.getToken(),
       refreshToken: this.token.getResfreshToken(),
-      duration: this.token.getDuration()
+      duration: this.token.getDuration(),
     };
-
-    console.log(this.info);
-
   }
  
   public detectDevice() {
@@ -68,6 +66,6 @@ export class AppComponent implements OnInit{
       icon: 'nb-compose',
       responsive: true,
       route: [ '/add' ],
-    },
+    }
   ];
 }

@@ -30,7 +30,7 @@
               "node_modules/nebular-icons/scss/nebular-icons.scss",
               "node_modules/@nebular/theme/styles/prebuilt/corporate.css",
               "node_modules/ionicons/scss/ionicons.scss",
-              "node_modules/socicon/css/socicon.css"
+              "node_modules/socicon/css/socicon.css",
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

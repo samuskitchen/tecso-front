@@ -12,14 +12,7 @@ import { environment as ENV} from 'src/environments/environment';
 
 export class AccountService {
 
-  private httpOptions = {
-    headers: new HttpHeaders({ 
-      'Content-Type': 'application/json',
-      'Authorization': this.tokenStorage.getTokenType() + this.tokenStorage.getToken()
-     })
-  };
-
-  constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { }
+  constructor(private http: HttpClient) { }
 
   getAccountById(id: number): Observable<Account> {
     return this.http.get<Account>(`${ENV.baseUrl}account/find/id?id=${id}`);
@@ -29,8 +22,8 @@ export class AccountService {
     return this.http.post<Account>(`${ENV.baseUrl}account/save`, account);
   }
 
-  updateAccount(accountUpdate: Object): Observable<Object> {
-    return this.http.put(`${ENV.baseUrl}account/update`, accountUpdate);
+  updateAccount(accountUpdate: Account): Observable<string> {
+    return this.http.put<string>(`${ENV.baseUrl}account/update`, accountUpdate);
   }
 
   deleteAccount(id: number): Observable<string> {
@@ -38,7 +31,13 @@ export class AccountService {
   }
 
   getAccountTypeList(accountType: string, page: number, size: number): Observable<ListAccount> {
-    return this.http.get<ListAccount>(`${ENV.baseUrl}account/find/type/?accountType=${accountType}&page=${page}&size=${size}`);
+    if(page == null && size != null){
+      return this.http.get<ListAccount>(`${ENV.baseUrl}account/find/type/?accountType=${accountType}&size=${size}`);
+    } else if(page == null){
+      return this.http.get<ListAccount>(`${ENV.baseUrl}account/find/type/?accountType=${accountType}`);
+    } else{
+      return this.http.get<ListAccount>(`${ENV.baseUrl}account/find/type/?accountType=${accountType}&page=${page}&size=${size}`);
+    }
   }
 
 }

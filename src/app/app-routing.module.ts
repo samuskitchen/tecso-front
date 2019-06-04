@@ -1,4 +1,3 @@
-import { AccountDetailsComponent } from './components/account/account-details/account-details.component';
 import { CreateAccountComponent } from './components/account/create-account/create-account.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -7,14 +6,16 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './components/auth/login.auth.guard';
+import { MovementListComponent } from './components/movement/movement-list/movement-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
   { path: 'accounts', canActivate: [AuthGuard], component: AccountListComponent },
   { path: 'add', canActivate: [AuthGuard], component: CreateAccountComponent },
+  { path: 'movements', canActivate: [AuthGuard], component: MovementListComponent },
   { path: 'auth/login', component: LoginComponent },
   { path: 'auth/signup', component: RegisterComponent },
-  { path: 'home', component: HomeComponent},
+  { path: 'home', canActivate: [AuthGuard], component: HomeComponent},
 ];
 
 @NgModule({

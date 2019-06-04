@@ -1,0 +1,65 @@
+<mat-dialog-content class="mat-typography" id="movement-dialog">
+  <nb-layout-column>
+      <nb-card>
+          <nb-card-body>
+
+              <nb-alert *ngIf="successDisplay" outline="success" role="alert">
+                  <p class="alert-title"><b>Success!</b></p>
+                  <ul class="alert-message-list">
+                      <li class="alert-message">{{ successMessage }}</li>
+                  </ul>
+              </nb-alert>
+
+              <nb-alert *ngIf="errorDisplay" outline="danger" role="alert">
+                  <p class="alert-title"><b>Problems!</b></p>
+                  <ul class="alert-message-list">
+                      <li class="alert-message">{{ errorMessage }}</li>
+                  </ul>
+              </nb-alert>
+
+              <h1 id="title" class="title">List Movements</h1>
+
+              <div class="mat-elevation-z8">
+                  <mat-table #table [dataSource]="listData" matSort>
+                      <ng-container matColumnDef="date">
+                          <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+                          <mat-cell *matCellDef="let element">{{element.date | date : "MM-dd-yyyy hh:mm a"}}</mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="typeMovement">
+                          <mat-header-cell *matHeaderCellDef>Type Movement</mat-header-cell>
+                          <mat-cell *matCellDef="let element">{{element.typeMovement}}</mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="description">
+                          <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+                          <mat-cell *matCellDef="let element">{{element.description}}</mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="amount">
+                          <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+                          <mat-cell *matCellDef="let element">{{element.amount | currency}}</mat-cell>
+                      </ng-container>
+                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                  </mat-table>
+                  <mat-paginator #paginator
+                          [length]="totalElements" 
+                          [pageIndex]="0" 
+                          [pageSize]="5" 
+                          [pageSizeOptions]="[5, 10, 25, 100]"
+                          [showFirstLastButtons]="true">
+                  </mat-paginator>
+              </div>
+              <br>
+
+                  <div class="col-sm-6 input-group" style="margin: auto;">
+                      <a nbButton
+                          fullWidth
+                          status="warning"
+                          (click)="onClose()">
+                          Close
+                      </a>
+                  </div>
+              
+          </nb-card-body>
+      </nb-card>
+  </nb-layout-column>
+</mat-dialog-content>

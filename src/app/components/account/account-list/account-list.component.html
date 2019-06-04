@@ -2,7 +2,7 @@
     <nb-card>
         <nb-card-body>
 
-            <nb-alert *ngIf="isSignedUp" outline="success" role="alert">
+            <nb-alert *ngIf="successDisplay" outline="success" role="alert">
                 <p class="alert-title"><b>Success!</b></p>
                 <ul class="alert-message-list">
                     <li class="alert-message">{{ successMessage }}</li>
@@ -18,7 +18,7 @@
 
             <mat-form-field>
             <mat-label>Select an option</mat-label>
-            <mat-select [(ngModel)]="accounType" required>
+            <mat-select [(ngModel)]="accounType">
                 <mat-option *ngFor="let accounType of accounTypes" [value]="accounType.value">
                     {{accounType.viewValue}}
                 </mat-option>
@@ -26,11 +26,13 @@
             <mat-error *ngIf="accounTypeControl.hasError('required')">Please choose an account type</mat-error>
             </mat-form-field>
 
-            <button 
-                nbButton
-                class="btn btn-primary btn-xs button-search" 
+            <a nbButton
+                name="Search" 
+                type="button" 
+                (focus)="search()" 
                 (click)="search()" 
-                [disabled]="accounType == null">Search</button>
+                class="btn btn-primary btn-xs button-search"
+                [disabled]="accounType == null">Search</a>
 
             <hr>
 
@@ -46,7 +48,7 @@
                     </ng-container>
                     <ng-container matColumnDef="balance">
                         <mat-header-cell *matHeaderCellDef>Balance</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{element.balance}}</mat-cell>
+                        <mat-cell *matCellDef="let element">{{element.balance | currency}}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="accountType">
                         <mat-header-cell *matHeaderCellDef>Account Type</mat-header-cell>
@@ -55,8 +57,10 @@
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                     <mat-cell *matCellDef="let row">
-                        <button mat-icon-button><mat-icon>launch</mat-icon></button>
-                        <button mat-icon-button color="warn" (click)="deleteAccount(row)"><mat-icon>delete_outline</mat-icon></button>
+                        <button mat-icon-button matTooltip="Edit Account" (click)="onEdit(row)"><mat-icon>edit</mat-icon></button>
+                        <button mat-icon-button matTooltip="Add Movement" (click)="onMovement(row)"><mat-icon>recent_actors</mat-icon></button>
+                        <button mat-icon-button matTooltip="List Movement"(click)="onListMovement(row)"><mat-icon>assessment</mat-icon></button>
+                        <button mat-icon-button matTooltip="Delete Account"color="warn" (click)="deleteAccount(row)"><mat-icon>delete_outline</mat-icon></button>
                     </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

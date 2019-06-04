@@ -1,13 +1,21 @@
-<div *ngIf="info.token; else loggedOut">
-  <h5 class="text-primary">Your Information</h5>
-  <p>
-    <strong>RefreshToken:</strong> {{info.refreshToken}}<br/>
-    <strong>Duration:</strong> {{info.duration}}<br />
-    <strong>Token:</strong> {{info.token}}.
-  </p>
-  <button class="btn btn-secondary" (click)="logout()">Logout</button>
-</div>
+<nb-layout-column>
+  <nb-card>
+    <nb-card-body>
+      <nb-auth-block style="margin: auto;">
+        
+        <div>
+            <h1 class="text-primary">Welcome to the process of accounts and movements</h1>
+            <br>
+            
+            <p>
+              <img src="assets/img/tecso-logo.png">
+            </p>
+              
+            <br>
+            <button class="btn btn-secondary" (click)="logout()">Logout</button>
+        </div>
 
-<ng-template #loggedOut>
-  Please login.
-</ng-template>
+      </nb-auth-block>
+    </nb-card-body>
+  </nb-card>
+</nb-layout-column>

@@ -1,12 +1,14 @@
 import { AccountService } from "../../../services/account/account.service";
 import { Account } from "../../../model/account";
-import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, ViewChild, AfterViewInit, OnInit } from "@angular/core";
 import { ListAccount } from 'src/app/model/listAccount';
-import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatDialogConfig, MatDialog } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { merge } from "rxjs";
 import { tap } from 'rxjs/operators';
-
+import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
+import { CreateMovementComponent } from '../../movement/create-movement/create-movement.component';
+import { MovementListComponent } from '../../movement/movement-list/movement-list.component';
 
 export interface AccountType {
   value: string;
@@ -26,7 +28,8 @@ export interface AccountType {
 
 export class AccountListComponent implements OnInit, AfterViewInit{
 
-  constructor(private accountService: AccountService) { 
+  constructor(private accountService: AccountService,
+              private dialog: MatDialog,) { 
   }
 
   listData: MatTableDataSource<Account>;
@@ -34,7 +37,7 @@ export class AccountListComponent implements OnInit, AfterViewInit{
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  accounType: string;
+  accounType: string = "CORRIENTE";
   totalElements: number = 0;
   accounts: ListAccount;
   errorMessage = "";
@@ -48,17 +51,31 @@ export class AccountListComponent implements OnInit, AfterViewInit{
     {value: 'AHORROS', viewValue: 'Savings'}
   ];
 
-  
-  ngOnInit() {
+  ngOnInit(): void{
+    this.accountService.getAccountTypeList(this.accounType, null, 5)
+    .subscribe(
+      data => {
+        this.listData = new MatTableDataSource(data.content);
+        this.totalElements = data.totalElements;
+        this.errorDisplay = false;
+        this.successDisplay = false;
+      },
+      error => {
+        this.errorDisplay = true;
+        this.successDisplay = false;
+        this.errorMessage = error.error['message'];
+      });
   }
 
-  ngAfterViewInit() {
-    // reset the paginator after sorting
+  ngAfterViewInit() : void {
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
     // on sort or paginate events, load a new page
     merge(this.sort.sortChange, this.paginator.page).pipe(
-        tap(() => this.search())
+        tap(() => {
+          this.search();
+          this.scrollTop();
+        })
     ).subscribe();
   }
 
@@ -69,12 +86,44 @@ export class AccountListComponent implements OnInit, AfterViewInit{
         this.listData = new MatTableDataSource(data.content);
         this.totalElements = data.totalElements;
         this.errorDisplay = false;
+        this.successDisplay = false;
       },
       error => {
         this.errorDisplay = true;
+        this.successDisplay = false;
         this.errorMessage = error.error['message'];
-      }
-    );
+      });
+  }
+
+  onEdit(row: Account){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "80%";
+    let dialogRef = this.dialog.open(AccountDialogComponent, dialogConfig);
+    dialogRef.componentInstance.account = row;
+    dialogRef.afterClosed().subscribe(result => {
+      this.search();
+      this.scrollTop();
+    });
+  }
+
+  onMovement(row: Account){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "80%";
+    let dialogRef = this.dialog.open(CreateMovementComponent, dialogConfig);
+    dialogRef.componentInstance.account = row;
+  }
+
+  onListMovement(row: Account){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "80%";
+    let dialogRef = this.dialog.open(MovementListComponent, dialogConfig);
+    dialogRef.componentInstance.account = row;
   }
 
   deleteAccount(row: any) {
@@ -83,13 +132,27 @@ export class AccountListComponent implements OnInit, AfterViewInit{
         data => {
           this.successDisplay = true;
           this.errorDisplay = false;
-          this.search();
           this.successMessage = data;
+          //this.search();
+          this.scrollTop();
         },
         error => {
-          this.successDisplay = false;
-          this.errorDisplay = true;
-          this.errorMessage = error.error['message'];
-        })
+          if(error['status'] && error['status'] == 200){
+            this.successDisplay = true;
+            this.errorDisplay = false;
+            this.successMessage = "The account was successfully deleted";
+            //this.search();
+            this.scrollTop();
+          } else {
+            this.successDisplay = false;
+            this.errorDisplay = true;
+            this.errorMessage = error.error['message'];
+          }
+      });
   }
+
+  scrollTop(): void{
+    window.scrollTo(0, 0)
+  }
+
 }

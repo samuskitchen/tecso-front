@@ -5,8 +5,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AccountDialogComponent } from './components/account/account-dialog/account-dialog.component';
 import { CreateAccountComponent } from './components/account/create-account/create-account.component';
-import { AccountDetailsComponent } from './components/account/account-details/account-details.component';
 import { AccountListComponent } from './components/account/account-list/account-list.component';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { LoginComponent } from './components/login/login.component';
@@ -20,16 +20,21 @@ import * as Nebular from '@nebular/theme';
 import { NbAuthModule } from '@nebular/auth';
 import { NbTableModule } from '@nebular/theme/components/cdk/table';
 import * as Material from "@angular/material";
+import { CreateMovementComponent } from './components/movement/create-movement/create-movement.component';
+import { MovementListComponent } from './components/movement/movement-list/movement-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CreateAccountComponent,
-    AccountDetailsComponent,
     AccountListComponent,
+    AccountDialogComponent,
     LoginComponent,
     RegisterComponent,
     HomeComponent,
+    CreateMovementComponent,
+    MovementListComponent,
+    
   ],
   
   imports: [
@@ -57,18 +62,35 @@ import * as Material from "@angular/material";
     NbAuthModule.forRoot(),
     NbTableModule,
     Nebular.NbRouteTabsetModule,
+    Nebular.NbSelectModule,
+    Nebular.NbRadioModule,
 
     //Material Angular
+    Material.MatToolbarModule,
     Material.MatGridListModule,
     Material.MatFormFieldModule,
     Material.MatInputModule,
+    Material.MatRadioModule,
+    Material.MatSelectModule,
+    Material.MatCheckboxModule,
+    Material.MatDatepickerModule,
+    Material.MatNativeDateModule,
+    Material.MatButtonModule,
+    Material.MatSnackBarModule,
     Material.MatTableModule,
     Material.MatIconModule,
     Material.MatPaginatorModule,
     Material.MatSortModule,
-    Material.MatSelectModule,
-    Material.MatFormFieldModule,
+    Material.MatDialogModule,
+    Material.MatTooltipModule,
   ],
+  
+  entryComponents: [
+    AccountDialogComponent,
+    CreateMovementComponent,
+    MovementListComponent,
+  ],
+
   providers: [
     AuthInterceptor, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthGuard,

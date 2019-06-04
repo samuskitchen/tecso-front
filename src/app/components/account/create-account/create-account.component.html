@@ -1,20 +1,303 @@
-<h3>Create Account</h3>
-<div [hidden]="submitted" style="width: 400px;">
-    <form (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="name">Currency</label>
-            <input type="text" class="form-control" id="currency" required [(ngModel)]="account.currency" name="currency">
-        </div>
+<nb-layout-column>
+    <nb-card>
+        <nb-card-body id="id-create-account">
+            <nb-auth-block style="margin: auto;">
 
-        <div class="form-group">
-            <label for="name">Account Type</label>
-            <input type="text" class="form-control" id="accountType" required [(ngModel)]="account.accountType" name="accountType">
-        </div>
+                <nb-alert *ngIf="isCreateFailed" outline="danger" role="alert">
+                    <p class="alert-title"><b>Problems!</b></p>
+                    <ul class="alert-message-list">
+                        <li class="alert-message">{{ errorMessage }}</li>
+                    </ul>
+                </nb-alert>
+                
+                <nb-alert *ngIf="isCreateUp" outline="success" role="alert">
+                    <p class="alert-title"><b>Success!</b></p>
+                    <ul class="alert-message-list">
+                        <li class="alert-message">{{ successMessage }}</li>
+                    </ul>
+                </nb-alert>
 
-        <button type="submit" class="btn btn-success">Submit</button>
-    </form>
-</div>
+                <h1 id="title" class="title">Create Account</h1>
 
-<div [hidden]="!submitted">
-    <h4>You submitted successfully!</h4>
-</div>
+                <form name="form" (ngSubmit)="f.form.valid && create()" #f="ngForm" aria-labelledby="title" class="ng-untouched ng-pristine ng-valid">
+
+                    <div class="form-control-group">
+                        <label class="label" for="select-currency">Currency:</label>
+                        <nb-select 
+                                id="select-currency" 
+                                placeholder="Select Currency" 
+                                status="primary"
+                                #currency="ngModel"
+                                name="currency"
+                                [(ngModel)]="account.currency"
+                                [(selected)]="account.currency"
+                                autofocus
+                                required>
+                            <nb-option value="PESO">Pesos</nb-option>
+                            <nb-option value="DOLAR">Dolar</nb-option>
+                            <nb-option value="EURO">Euro</nb-option>
+                        </nb-select>
+                        <ng-container *ngIf="currency.invalid && currency.touched">
+                            <p class="error-message" *ngIf="currency.errors?.required">
+                                Currency is required!
+                            </p>
+                        </ng-container>
+                    </div>
+
+                    <div class="form-control-group" >
+                        <label class="label" for="input-balance">Balance:</label>
+                        <input nbInput
+                                smallWidth
+                                class="form-control"
+                                [(ngModel)]="account.balance"
+                                #balance="ngModel"
+                                pattern="^(0|[1-9][0-9]*)$"
+                                name="balance"
+                                id="input-balance"
+                                type="number"
+                                [maxlength]="20"
+                                [required]="true"
+                                [attr.aria-invalid]="balance.invalid && balance.touched ? true : null">
+                            <ng-container *ngIf="balance.invalid && balance.touched">
+                                <p class="error-message" *ngIf="balance.errors?.required">
+                                    Balance is required!
+                                </p>
+                            </ng-container>
+                    </div>
+
+                    <div class="form-control-group">
+                        <label class="label" for="select-account-type">Account Type:</label>
+                        <nb-select 
+                                id="select-account-type" 
+                                placeholder="Select Account Type" 
+                                status="primary"
+                                name="accountType"
+                                #accountType="ngModel"
+                                [(ngModel)]="account.accountType"
+                                [(selected)]="account.accountType"
+                                required>
+                            <nb-option value="CORRIENTE">Current</nb-option>
+                            <nb-option value="AHORROS">Savings</nb-option>
+                        </nb-select>
+                        <ng-container *ngIf="accountType.invalid && accountType.touched">
+                            <p class="error-message" *ngIf="accountType.errors?.required">
+                                Account Type is required!
+                            </p>
+                        </ng-container>
+                    </div>
+
+                    <label class="label" for="radio-person-type">Choose Person Type:</label>
+                    <div class="form-control-group col-sm-6">
+                        <nb-radio-group id="radio-person-type" [(value)]="radioGroupPerson" status="primary" (valueChange)="selectTypePerson()">
+                            <nb-radio [value]="true">Legal Person</nb-radio>
+                            <nb-radio [value]="false">Physical Person</nb-radio>
+                        </nb-radio-group>
+                    </div>
+
+                    <nb-card *ngIf="showLegalPerson" style="margin: auto; width: 502px;">
+                        <nb-card-body>
+                            <nb-auth-block style="margin: auto;">
+                                <h1 id="title" class="title">Legal Person Data</h1>
+
+                                <div class="input-group input-group-sm" >
+                                    <label class="label" for="input-businessName">Business Name:</label>
+                                    <input nbInput
+                                            class="form-control"
+                                            fullWidth
+                                            [(ngModel)]="legalPerson.businessName"
+                                            #businessName="ngModel"
+                                            name="businessName"
+                                            id="input-businessName"
+                                            autofocus
+                                            [required]="true"
+                                            [attr.aria-invalid]="businessName.invalid && businessName.touched ? true : null">
+                                    <ng-container *ngIf="businessName.invalid && businessName.touched">
+                                        <p class="error-message" *ngIf="businessName.errors?.required">
+                                            Business Name is required!
+                                        </p>
+                                    </ng-container>
+                                </div>
+                                <br>
+                                <div class="input-group input-group-sm">
+                                    <label class="label" for="input-foundationYear">Foundation Year:</label>
+                                    <input nbInput
+                                            class="form-control"
+                                            fullWidth
+                                            [(ngModel)]="legalPerson.foundationYear"
+                                            #foundationYear="ngModel"
+                                            name="foundationYear"
+                                            id="input-foundationYear"
+                                            type="number"
+                                            maxlength="4"
+                                            [required]="true"
+                                            [attr.aria-invalid]="foundationYear.invalid && foundationYear.touched ? true : null">
+                                    <ng-container *ngIf="foundationYear.invalid && foundationYear.touched">
+                                        <p class="error-message" *ngIf="foundationYear.errors?.required">
+                                            Foundation Year is required!
+                                        </p>
+                                    </ng-container>
+                                </div>
+                                <br>
+                                <div class="input-group input-group-sm">
+                                    <label class="label" for="input-rut">RUT:</label>
+                                    <input nbInput
+                                            class="form-control"
+                                            fullWidth
+                                            [(ngModel)]="legalPerson.rut"
+                                            #rut="ngModel"
+                                            name="rut"
+                                            type="number"
+                                            id="input-rut"
+                                            [maxlength]="20"
+                                            [required]="true"
+                                            [attr.aria-invalid]="rut.invalid && rut.touched ? true : null">
+                                    <ng-container *ngIf="rut.invalid && rut.touched">
+                                        <p class="error-message" *ngIf="rut.errors?.required">
+                                            RUT is required!
+                                        </p>
+                                    </ng-container>
+                                </div>
+                                <br>
+                            </nb-auth-block>
+                        </nb-card-body>
+                    </nb-card>
+                    <br *ngIf="showLegalPerson">
+
+                    <nb-card *ngIf="showPhysicalPerson" style="margin: auto; width: 502px;">
+                        <nb-card-body>
+                            <nb-auth-block style="margin: auto;">
+                                <h1 id="title" class="title">Legal Physical Data</h1>
+                                <br>
+                                <div class="input-group input-group-sm" >
+                                    <label class="label" for="input-name">Name:</label>
+                                    <input nbInput
+                                            fullWidth
+                                            class="form-control"
+                                            [(ngModel)]="physicalPerson.name"
+                                            #name="ngModel"
+                                            name="name"
+                                            id="input-name"
+                                            autofocus
+                                            [required]="true"
+                                            [attr.aria-invalid]="name.invalid && name.touched ? true : null">
+                                    <ng-container *ngIf="name.invalid && name.touched">
+                                        <p class="error-message" *ngIf="name.errors?.required">
+                                            Name is required!
+                                        </p>
+                                    </ng-container>
+                                </div>
+                                <br>
+                                <div class="input-group input-group-sm" >
+                                    <label class="label" for="input-surname">SurName:</label>
+                                    <input nbInput
+                                            fullWidth
+                                            class="form-control"
+                                            [(ngModel)]="physicalPerson.surname"
+                                            #surname="ngModel"
+                                            name="surname"
+                                            id="input-surname"
+                                            [required]="true"
+                                            [attr.aria-invalid]="surname.invalid && surname.touched ? true : null">
+                                    <ng-container *ngIf="surname.invalid && surname.touched">
+                                        <p class="error-message" *ngIf="surname.errors?.required">
+                                            SurName is required!
+                                        </p>
+                                    </ng-container>
+                                </div>
+                                <br>
+                                <div class="form-control-group">
+                                    <label class="label" for="select-document-type">Document Type:</label>
+                                    <nb-select 
+                                            id="select-document-type" 
+                                            placeholder="Document Type" 
+                                            status="primary"
+                                            [(ngModel)]="physicalPerson.documentType"
+                                            #documentType="ngModel"
+                                            name="documentType"
+                                            [(selected)]="physicalPerson.documentType"
+                                            required>
+                                        <nb-option value="NI">Número identificación Tributaria</nb-option>
+                                        <nb-option value="CC">Cédula de Ciudadanía</nb-option>
+                                        <nb-option value="CE">Cédula de Extranjería</nb-option>
+                                        <nb-option value="TI">Tarjeta de Identidad</nb-option>
+                                        <nb-option value="RC">Registro Civil</nb-option>
+                                        <nb-option value="PA">Pasaporte</nb-option>
+                                        <nb-option value="CD">Carnet Diplomático</nb-option>
+                                    </nb-select>
+                                    <ng-container *ngIf="documentType.invalid && documentType.touched">
+                                        <p class="error-message" *ngIf="documentType.errors?.required">
+                                            Document Type is required!
+                                        </p>
+                                    </ng-container>
+                                </div>
+
+                                <div class="input-group input-group-sm">
+                                    <label class="label" for="input-numberDocument">Number Document:</label>
+                                    <input nbInput
+                                            fullWidth
+                                            class="form-control"
+                                            [(ngModel)]="physicalPerson.numberDocument"
+                                            #numberDocument="ngModel"
+                                            name="numberDocument"
+                                            id="input-numberDocument"
+                                            [maxlength]="20"
+                                            [required]="true"
+                                            [attr.aria-invalid]="numberDocument.invalid && numberDocument.touched ? true : null">
+                                    <ng-container *ngIf="numberDocument.invalid && numberDocument.touched ">
+                                        <p class="error-message" *ngIf="numberDocument.errors?.required">
+                                            Number Document is required!
+                                        </p>
+                                    </ng-container>
+                                </div>
+                                <br>
+                                <div class="input-group input-group-sm">
+                                    <label class="label" for="input-rut-physical">RUT:</label>
+                                    <input nbInput
+                                            fullWidth
+                                            class="form-control"
+                                            [(ngModel)]="physicalPerson.rut"
+                                            #rutPhysical="ngModel"
+                                            name="rutPhysical"
+                                            type="number"
+                                            [maxlength]="20"
+                                            id="input-rut-physical"
+                                            [required]="true"
+                                            [attr.aria-invalid]="rutPhysical.invalid && rutPhysical.touched ? true : null">
+                                    <ng-container *ngIf="rutPhysical.invalid && rutPhysical.touched">
+                                        <p class="error-message" *ngIf="rutPhysical.errors?.required">
+                                            RUT is required!
+                                        </p>
+                                    </ng-container>
+                                </div>
+                                <br>
+                            </nb-auth-block>
+                        </nb-card-body>
+                    </nb-card>
+                    <br *ngIf="showPhysicalPerson">
+
+
+                    <div class="row full-name-inputs">
+                        <div class="col-sm-6 input-group">
+                            <a nbButton
+                                fullWidth
+                                status="warning"
+                                (click)="newAccount()">
+                                New Account
+                            </a>
+                        </div>
+                        <div class="col-sm-6 input-group">
+                            <button nbButton
+                                fullWidth
+                                status="primary"
+                                [class.btn-pulse]="submitted">
+                                Create
+                            </button>
+                        </div>
+                    </div>    
+                
+
+            </form>
+        </nb-auth-block>
+    </nb-card-body>
+  </nb-card>
+</nb-layout-column>
