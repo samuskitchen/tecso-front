@@ -41,6 +41,8 @@ export class CreateAccountComponent implements OnInit {
   ngOnInit() {
     this.showLegalPerson = false;
     this.showPhysicalPerson = false;
+    this.legalPerson.active = false;
+    this.physicalPerson.active = false;
   }
 
   newAccount(): void {
@@ -87,14 +89,16 @@ export class CreateAccountComponent implements OnInit {
     if(this.radioGroupPerson){
       this.showLegalPerson = true;
       this.showPhysicalPerson = false;
-      this.physicalPerson = null;
+      //this.physicalPerson = null;
       this.legalPerson.active = true;
+      this.physicalPerson.active = false;
       this.legalPerson = new LegalPerson();
     }else{
       this.showLegalPerson = false;
       this.showPhysicalPerson = true;
-      this.legalPerson = null;
+      //this.legalPerson = null;
       this.physicalPerson.active = true;
+      this.legalPerson.active = false;
       this.physicalPerson = new PhysicalPerson();
     }
   }
